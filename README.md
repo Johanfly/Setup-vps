@@ -111,7 +111,7 @@ sudo systemctl stop mysql.service
 ```
 `sudo nano /lib/systemd/system/mysql.service`
 
-`remove --skip-grant-tables --skip-networking`
+remove `--skip-grant-tables --skip-networking`
 ```
 sudo systemctl daemon-reload
 sudo systemctl start mysql.service
