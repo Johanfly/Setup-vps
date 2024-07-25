@@ -246,6 +246,7 @@ pm2 restart server.js
 ### Fix permission
 
 ```
+cd /var/www
 sudo find domain.com -type f -exec chmod 644 {} \;
 sudo find domain.com -type d -exec chmod 755 {} \;
 sudo chown -R www-data:www-data /var/www/domain.com
