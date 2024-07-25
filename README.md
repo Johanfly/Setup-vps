@@ -251,6 +251,6 @@ sudo find domain.com -type f -exec chmod 644 {} \;
 sudo find domain.com -type d -exec chmod 755 {} \;
 sudo chown -R www-data:www-data /var/www/domain.com
 sudo chown -R $USER:$USER /var/www/domain.com/credentials
-sudo chmod -R 777 storage
-sudo chmod -R 777 bootstrap/cache/
+sudo chmod -R 777 /var/www/domain.com/storage
+sudo chmod -R 777 /var/www/domain.com/bootstrap/cache/
 ```
