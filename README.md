@@ -239,6 +239,7 @@ pm2 status server.js
 pm2 restart server.js 
 ```
 ### cron
+`crontab -e`
 ```
 * * * * * /usr/bin/php /var/www/domain.com/artisan schedule:run >> /dev/null 2>&1
 ```
