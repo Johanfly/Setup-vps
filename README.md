@@ -7,7 +7,7 @@ cat ~/.ssh/id_rsa.pub | ssh root@ipvps "mkdir ~/.ssh; cat >> ~/.ssh/authorized_k
 
 ### Login root
 ```
-ssh root@ip
+ssh root@ipvps
 chmod 700 ~/.ssh
 chmod 600 ~/.ssh/authorized_keys
 adduser johanfly
@@ -22,7 +22,7 @@ cat ~/.ssh/id_rsa.pub | ssh johanfly@ipvps "mkdir ~/.ssh; cat >> ~/.ssh/authoriz
 
 ### Secure Ssh
 ```
-ssh johanfly@ip
+ssh johanfly@ipvps
 chmod 700 ~/.ssh
 chmod 600 ~/.ssh/authorized_keys
 ```
