@@ -220,7 +220,7 @@ server {
     index index.php;
 
     ssl_certificate    /etc/ssl/certs/domain.com.pem;
-    ssl_certificate_key    /etc/ssl/certs/domain.com.pem;
+    ssl_certificate_key    /etc/ssl/certs/domain.com.key.pem;
 
 
     location / {
