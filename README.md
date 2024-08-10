@@ -29,11 +29,8 @@ cat ~/.ssh/id_rsa.pub | ssh johanfly@ipvps "mkdir ~/.ssh; cat >> ~/.ssh/authoriz
 ##### update
 
 ```
-sudo apt update && sudo apt upgrade -y
-```
-
-``` bash
 ssh johanfly@ipvps
+sudo apt update && sudo apt upgrade -y
 sudo chmod 700 ~/.ssh
 sudo chmod 600 ~/.ssh/authorized_keys
 ```
