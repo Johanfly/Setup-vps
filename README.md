@@ -28,7 +28,7 @@ cat ~/.ssh/id_rsa.pub | ssh johanfly@ipvps "mkdir ~/.ssh; cat >> ~/.ssh/authoriz
 
 ##### update
 
-```
+``` bash
 ssh johanfly@ipvps
 sudo apt update && sudo apt upgrade -y
 sudo chmod 700 ~/.ssh
@@ -37,22 +37,24 @@ sudo chmod 600 ~/.ssh/authorized_keys
 
 ##### Install and Configure Google Authenticator
 
-```
+``` bash
 sudo apt install -y libpam-google-authenticator
 ```
 
 ###### create & scan a new secret key
 
-```
+``` bash
 google-authenticator
 ```
 
 ##### Configure SSH Daemon to Use Google Authenticator
 
 ###### Password Authentication with Google Authenticator
-`sudo nano /etc/ssh/sshd_config`
-
+``` bash
+sudo nano /etc/ssh/sshd_config
 ```
+
+``` bash
 UsePAM yes
 ChallengeResponseAuthentication yes
 PermitRootLogin yes
@@ -60,20 +62,26 @@ PermitRootLogin yes
 
 Save and close the file
 
-`sudo nano /etc/pam.d/sshd`
-
+``` bash
+sudo nano /etc/pam.d/sshd
 ```
+
+``` bash
 @include common-auth
 #two-factor authentication via Google Authenticator
 auth   required   pam_google_authenticator.so
 ```
 
-`sudo systemctl restart ssh`
-<br>
+``` bash
+sudo systemctl restart ssh
+```
+
 ###### Public Key Authentication with Google Authenticator
 
 ######
-`sudo nano /etc/ssh/sshd_config`
+``` bash
+sudo nano /etc/ssh/sshd_config
+```
 
 ```
 UsePAM yes
@@ -84,9 +92,11 @@ PermitRootLogin no
 AuthenticationMethods publickey,keyboard-interactive
 ```
 
-`sudo nano /etc/pam.d/sshd`
-
+``` bash
+sudo nano /etc/pam.d/sshd
 ```
+
+``` bash
 #@include common-auth
 #two-factor authentication via Google Authenticator
 auth   required   pam_google_authenticator.so
@@ -94,7 +104,7 @@ auth   required   pam_google_authenticator.so
 
 Save and close
 
-```
+``` bash
 sudo systemctl restart ssh
 ```
 
@@ -124,7 +134,9 @@ git clone https://github.com/zdharma-continuum/fast-syntax-highlighting.git ${ZS
 
 ### Set plugin zsh
 
-`nano .zshrc`
+``` bash
+nano .zshrc
+```
 
 ``` bash
 plugins=( 
@@ -135,7 +147,9 @@ plugins=(
 
 ### Set Ufw
 
-`sudo nano /etc/default/ufw`
+``` bash
+sudo nano /etc/default/ufw
+```
 
 ```
 IPV6=yes
@@ -160,7 +174,9 @@ sudo systemctl start mysql.service
 sudo systemctl stop mysql.service
 ```
 
-`sudo nano /lib/systemd/system/mysql.service`
+``` bash
+sudo nano /lib/systemd/system/mysql.service
+```
 
 add `--skip-grant-tables --skip-networking`
 
@@ -173,7 +189,7 @@ sudo systemctl daemon-reload
 sudo systemctl start mysql.service
 ```
 
-``` sql
+``` bash
 sudo mysql -u root
 FLUSH PRIVILEGES;
 ALTER USER 'root'@'localhost' IDENTIFIED WITH caching_sha2_password BY 'new_password';
@@ -184,7 +200,9 @@ EXIT;
 sudo systemctl stop mysql.service
 ```
 
-`sudo nano /lib/systemd/system/mysql.service`
+``` bash
+sudo nano /lib/systemd/system/mysql.service
+```
 
 remove `--skip-grant-tables --skip-networking`
 
@@ -238,7 +256,7 @@ nvm list-remote
 
 ### create Mysql db user
 
-``` sql
+``` bash
 sudo mysql -u root -p
 CREATE DATABASE dbname;
 CREATE USER 'dbuser'@'%' IDENTIFIED WITH mysql_native_password BY 'dbpassword';
@@ -254,7 +272,9 @@ sudo mkdir /var/www/domain.com
 sudo chown -R $USER:$USER /var/www/domain.com
 ```
 
-`sudo nano /etc/nginx/sites-available/domain.com.conf`
+``` bash
+sudo nano /etc/nginx/sites-available/domain.com.conf
+```
 
 ```
 server {
@@ -337,7 +357,7 @@ pm2 restart server.js
 
 `crontab -e`
 
-```
+``` bash
 * * * * * /usr/bin/php /var/www/domain.com/artisan schedule:run >> /dev/null 2>&1
 ```
 
