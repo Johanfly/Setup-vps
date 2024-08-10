@@ -50,7 +50,6 @@ google-authenticator
 ##### Configure SSH Daemon to Use Google Authenticator
 
 ###### Password Authentication with Google Authenticator
-<br>
 `sudo nano /etc/ssh/sshd_config`
 
 ```
