@@ -278,7 +278,7 @@ nvm list-remote
 ``` bash
 sudo mysql -u root -p
 CREATE DATABASE dbname;
-CREATE USER 'dbuser'@'%' IDENTIFIED WITH mysql_native_password BY 'dbpassword';
+CREATE USER 'dbuser'@'%' IDENTIFIED WITH caching_sha2_password BY 'dbpassword';
 GRANT ALL ON dbname.* TO 'dbuser'@'%';
 FLUSH PRIVILEGES;
 EXIT;
