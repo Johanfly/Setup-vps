@@ -347,7 +347,7 @@ sudo systemctl restart php8.0-fpm
 ``` bash
 cd var/www/domain.com
 composer update
-php artisan key:generate --show
+php artisan key:generate
 php artisan migrate 
 php artisan db:seed
 php artisan storage:link
