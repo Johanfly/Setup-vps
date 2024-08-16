@@ -10,12 +10,21 @@ cat ~/.ssh/id_rsa.pub | ssh root@ipvps "mkdir ~/.ssh; cat >> ~/.ssh/authorized_k
 
 ``` bash
 ssh root@ipvps
+```
+``` bash
 chmod 700 ~/.ssh
+```
+``` bash
 chmod 600 ~/.ssh/authorized_keys
+```
+``` bash
 adduser johanfly
+```
+``` bash
 passwd johanfly
+```
+``` bash
 usermod -aG sudo johanfly
-exit
 ```
 
 ### copy ssh from local
@@ -30,14 +39,20 @@ cat ~/.ssh/id_rsa.pub | ssh johanfly@ipvps "mkdir ~/.ssh; cat >> ~/.ssh/authoriz
 
 ``` bash
 ssh johanfly@ipvps
+```
+``` bash
 sudo apt update && sudo apt upgrade -y
+```
+``` bash
 sudo chmod 700 ~/.ssh
+```
+``` bash
 sudo chmod 600 ~/.ssh/authorized_keys
 ```
 
 ### Lock root
 ``` bash
-sudo passwd -L root
+sudo passwd -l root
 ```
 ##### Install and Configure Google Authenticator
 
@@ -52,41 +67,9 @@ google-authenticator
 ```
 
 ##### Configure SSH Daemon to Use Google Authenticator
-
-###### Password Authentication with Google Authenticator
 ``` bash
 sudo nano /etc/ssh/sshd_config
 ```
-
-``` bash
-UsePAM yes
-ChallengeResponseAuthentication yes
-PermitRootLogin yes
-```
-
-Save and close the file
-
-``` bash
-sudo nano /etc/pam.d/sshd
-```
-
-``` bash
-@include common-auth
-#two-factor authentication via Google Authenticator
-auth   required   pam_google_authenticator.so
-```
-
-``` bash
-sudo systemctl restart ssh
-```
-
-###### Public Key Authentication with Google Authenticator
-
-######
-``` bash
-sudo nano /etc/ssh/sshd_config
-```
-
 ```
 UsePAM yes
 ChallengeResponseAuthentication yes
@@ -95,6 +78,7 @@ PasswordAuthentication no
 PermitRootLogin no
 AuthenticationMethods publickey,keyboard-interactive
 ```
+Save and close
 
 ``` bash
 sudo nano /etc/pam.d/sshd
@@ -105,7 +89,6 @@ sudo nano /etc/pam.d/sshd
 #two-factor authentication via Google Authenticator
 auth   required   pam_google_authenticator.so
 ```
-
 Save and close
 
 ``` bash
@@ -115,10 +98,18 @@ sudo systemctl restart ssh
 ### Install package
 
 ``` bash
-sudo apt install zsh git-core curl software-properties-common nginx mysql-server php-cli unzip fail2ban
+sudo apt install zsh git-core curl software-properties-common nginx mysql-server unzip fail2ban
+```
+``` bash
 sudo add-apt-repository ppa:ondrej/php
+```
+``` bash
 sudo apt update
+```
+``` bash
 sudo apt install php8.0 php8.0-cli php8.0-common php8.0-mbstring php8.0-xml php8.0-mysql php8.0-curl php8.0-gd php8.0-fpm php8.0-intl php8.0-zip
+```
+``` bash
 sudo update-alternatives --config php
 ```
 ### Configuring Fail2ban
@@ -126,7 +117,7 @@ sudo update-alternatives --config php
 sudo nano /etc/fail2ban/jail.local
 ```
 ``` bash
-[ssh]
+[sshd]
 enabled = true
 maxretry = 3
 findtime = 10
@@ -134,6 +125,8 @@ bantime = 1d
 ```
 ``` bash
 sudo systemctl enable fail2ban
+```
+``` bash
 sudo systemctl start fail2ban
 ```
 
@@ -176,13 +169,26 @@ IPV6=yes
 
 ``` bash
 sudo ufw default deny incoming
+```
+``` bash
 sudo ufw default allow outgoing
+```
+``` bash
 sudo ufw app list
+```
+``` bash
 sudo ufw allow OpenSSH
+```
+``` bash
 sudo ufw allow "Nginx Full"
+```
+``` bash
 sudo ufw allow 2096 #clouflare allow
+```
+``` bash
 sudo ufw enable
-sudo ufw status
+```
+``` bash
 sudo ufw status verbose
 ```
 
@@ -190,6 +196,8 @@ sudo ufw status verbose
 
 ``` bash
 sudo systemctl start mysql.service
+```
+``` bash
 sudo systemctl stop mysql.service
 ```
 
@@ -205,13 +213,21 @@ ExecStart=/usr/sbin/mysqld --skip-grant-tables --skip-networking
 
 ``` bash
 sudo systemctl daemon-reload
+```
+``` bash
 sudo systemctl start mysql.service
 ```
 
 ``` bash
 sudo mysql -u root
+```
+``` bash
 FLUSH PRIVILEGES;
+```
+``` bash
 ALTER USER 'root'@'localhost' IDENTIFIED WITH caching_sha2_password BY 'new_password';
+```
+``` bash
 EXIT;
 ```
 
@@ -227,7 +243,11 @@ remove `--skip-grant-tables --skip-networking`
 
 ``` bash
 sudo systemctl daemon-reload
+```
+``` bash
 sudo systemctl start mysql.service
+```
+``` bash
 sudo mysql_secure_installation
 ```
 
@@ -269,7 +289,11 @@ source .zshrc
 
 ``` bash
 nvm install v16.20.2
+```
+``` bash
 nvm use 16.20.2
+```
+``` bash
 nvm list-remote
 ```
 
@@ -277,10 +301,20 @@ nvm list-remote
 
 ``` bash
 sudo mysql -u root -p
+```
+``` bash
 CREATE DATABASE dbname;
+```
+``` bash
 CREATE USER 'dbuser'@'%' IDENTIFIED WITH caching_sha2_password BY 'dbpassword';
+```
+``` bash
 GRANT ALL ON dbname.* TO 'dbuser'@'%';
+```
+``` bash
 FLUSH PRIVILEGES;
+```
+``` bash
 EXIT;
 ```
 
@@ -288,6 +322,8 @@ EXIT;
 
 ``` bash
 sudo mkdir /var/www/domain.com
+```
+``` bash
 sudo chown -R $USER:$USER /var/www/domain.com
 ```
 
@@ -339,6 +375,8 @@ sudo ln -s /etc/nginx/sites-available/domain.com.conf /etc/nginx/sites-enabled/d
 
 ``` bash
 sudo systemctl restart nginx
+```
+``` bash
 sudo systemctl restart php8.0-fpm
 ```
 
@@ -346,16 +384,32 @@ sudo systemctl restart php8.0-fpm
 
 ``` bash
 cd var/www/domain.com
+```
+``` bash
 composer update
+```
+``` bash
 php artisan key:generate
+```
+``` bash
 php artisan migrate 
+```
+``` bash
 php artisan db:seed
+```
+``` bash
 php artisan storage:link
+```
+``` bash
 php artisan optimize:clear
+```
+``` bash
 npm install
 ```
 
-`sudo nano server.js`
+``` bash
+sudo nano server.js
+```
 
 ``` javascript
 const https = require('https')
@@ -367,8 +421,14 @@ const server = https.createServer({
 
 ``` bash
 npm i -g pm2
+```
+``` bash
 pm2 start server.js 
-pm2 status server.js 
+```
+``` bash
+pm2 status server.js
+```
+``` bash
 pm2 restart server.js
 ```
 
@@ -384,17 +444,29 @@ pm2 restart server.js
 
 ``` bash
 cd /var/www
-sudo find domain.com -type f -exec chmod 644 {} \;
-sudo find domain.com -type d -exec chmod 755 {} \;
+```
+``` bash
 sudo chown -R www-data:www-data /var/www/domain.com
+```
+``` bash
+sudo find domain.com -type f -exec chmod 644 {} \;
+```
+``` bash
+sudo find domain.com -type d -exec chmod 755 {} \;
+```
+``` bash
 sudo chown -R $USER:$USER /var/www/domain.com/credentials
+```
+``` bash
 sudo chmod -R 777 /var/www/domain.com/storage
+```
+``` bash
 sudo chmod -R 777 /var/www/domain.com/bootstrap/cache/
 ```
 
 ### Set logrotate
 ``` bash
-sudo nano /etc/conf/mylog.conf
+sudo nano /etc/logrotate.d/mylog.conf
 ```
 ``` bash
 /var/logs/*.log 
@@ -407,16 +479,15 @@ sudo nano /etc/conf/mylog.conf
     delaycompress
     maxage 2
     size 100M
-    endscript
 }
 ```
 ``` bash
-sudo logrotate /etc/conf/mylog.conf
+sudo logrotate -v /etc/logrotate.d/mylog.conf
 ```
 ### Set Cron
 ``` bash
 sudo crontab -e
 ```
 ``` bash
-0 0 * * * /usr/sbin/logrotate /etc/conf/mylog.conf
+0 0 * * * /usr/sbin/logrotate /etc/logrotate.d/mylog.conf
 ```
