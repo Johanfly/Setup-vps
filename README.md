@@ -318,6 +318,29 @@ FLUSH PRIVILEGES;
 EXIT;
 ```
 
+### set php-fpm pools
+``` bash
+sudo cp /etc/php/8.0/fpm/pool.d/www.conf /etc/php/8.0/fpm/pool.d/fpm-johanfly.conf
+sudo mv /etc/php/8.0/fpm/pool.d/www.conf /etc/php/8.0/fpm/pool.d/www.conf.bak
+```
+``` bash
+sudo nano /etc/php/8.0/fpm/pool.d/fpm-johanfly.conf
+```
+change
+``` bash
+[www]
+user = www-data
+group = www-data
+listen = /run/php/php8.0-fpm.sock
+```
+to
+``` bash
+[johanfly]
+user = johanfly
+group = johanfly
+listen = /run/php/php8.0-fpm-johanfly.sock
+```
+
 ### Set nginx
 
 ``` bash
@@ -335,30 +358,47 @@ sudo nano /etc/nginx/sites-available/domain.com.conf
 server {
     listen 80;
     listen [::]:80;
-    server_name domain.com www.domain.com;
-
-    rewrite ^(.*) https://$host$1/login permanent;
+    server_name domain.com;
 }
 
 server {
     listen 443 ssl;
     listen [::]:443 ssl;
 
-    root /var/www/domain.com/public;
-    index index.php;
-
+    server_name domain.com;
+    
     ssl_certificate    /etc/ssl/certs/domain.com.pem;
     ssl_certificate_key    /etc/ssl/certs/domain.com.key.pem;
 
+    add_header X-Frame-Options "SAMEORIGIN";
+    add_header X-XSS-Protection "1; mode=block";
+    add_header X-Content-Type-Options "nosniff";
+
+    root /var/www/domain.com/public;
+    index index.php;
+
+    charset utf-8;
 
     location / {
         try_files $uri $uri/ /index.php?$query_string;
     }
 
+    location = /favicon.ico { access_log off; log_not_found off; }
+    location = /robots.txt  { access_log off; log_not_found off; }
+
+
     location ~ \.php$ {
         include snippets/fastcgi-php.conf;
-        fastcgi_pass unix:/run/php/php8.0-fpm.sock;
+        fastcgi_pass unix:/run/php/php8.0-fpm-johanfly.sock;
+        fastcgi_param SCRIPT_FILENAME $realpath_root$fastcgi_script_name;
+        include fastcgi_params;
+
     }
+
+    location ~ /\.(?!well-known).* {
+        deny all;
+    }
+
 
     error_log /var/log/nginx/error.log;
     access_log /var/log/nginx/access.log;
@@ -444,9 +484,6 @@ pm2 restart server.js
 
 ``` bash
 cd /var/www
-```
-``` bash
-sudo chown -R www-data:www-data /var/www/domain.com
 ```
 ``` bash
 sudo find domain.com -type f -exec chmod 644 {} \;
